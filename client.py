@@ -8,6 +8,17 @@ from decouple import config
 BASE_URL = config("BASE_URL")
 
 
+def get_active_channels():
+    
+    channels = requests.Session().get(f"{BASE_URL}/active_channels")
+
+    if channels.content:
+        print("Active channels:")
+        print(channels.content.decode('ascii'))
+    else:
+        print("There are currently no active channels.")
+
+
 def connect(url, username, channel):
 
     try:
@@ -30,6 +41,7 @@ def connect(url, username, channel):
         print("An unknown error occurred.")
         os._exit(1)
 
+
 def chat(user, channel):
     while True:
         text = input()
@@ -41,12 +53,20 @@ def chat(user, channel):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("username")
-    parser.add_argument("channel")
+    parser.add_argument('-list', action='store_true')
+    parser.add_argument('-join', nargs=2)
     args = parser.parse_args()
 
-    thread1 = threading.Thread(target=connect, args=(f"{BASE_URL}/stream",args.username, args.channel,))
-    thread1.start()
+    if args.list:
+        get_active_channels()
+    
+    if args.join:
+        args_list = args.join
+        username = args_list[0]
+        channel = args_list[1]
 
-    thread2 = threading.Thread(target=chat, args=(args.username,args.channel,))
-    thread2.start()
+        thread1 = threading.Thread(target=connect, args=(f"{BASE_URL}/stream", username, channel,))
+        thread1.start()
+
+        thread2 = threading.Thread(target=chat, args=(username,channel,))
+        thread2.start()

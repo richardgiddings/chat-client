@@ -20,9 +20,11 @@ BASE_URL - the url for the Flask chat server e.g. http://127.0.0.1:5000
 
 We can then run multiple chat clients from the command line using a command like:
 ```
-python3 client.py <username> <chat_name>
+python3 client.py -join <username> <chat_name>
 ```
 where we replace the *username* with the name we want to be known as in the chat and *chat_name* with the chat we want to connect to.
+
+If we want to see to see the active channels we can add the *-list* flag either on its own or with the above command to see the channels that have already been created.
 
 ## Screenshots
 
