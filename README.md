@@ -35,3 +35,7 @@ If we want to see to see the active channels we can add the *-list* flag either 
 **User 2**
 
 ![User 2](screenshots/user2.png)
+
+**Listing channels before and after someone has joined a channel**
+
+![Channels](screenshots/channels.png)
