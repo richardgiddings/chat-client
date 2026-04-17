@@ -9,19 +9,26 @@ BASE_URL = config("BASE_URL")
 
 
 def connect(url, username):
-    s = requests.Session()
 
-    print(f"Connected to {url} as {username}")
-    print("Type a message and press return to send it.")
-    print("Type 'exit' and press return to exit the chat.\n")
+    try:
+        s = requests.Session()
 
-    with s.get(url, headers=None, stream=True) as resp:
-        for line in resp.iter_lines():
-            if line:
-                parsed = line.decode('ascii')[2:-1]
-                if f"[{username}]" not in parsed:
-                    print(parsed)
+        print(f"Connected to {url} as {username}")
+        print("Type a message and press return to send it.")
+        print("Type 'exit' and press return to exit the chat.\n")
 
+        with s.get(url, headers=None, stream=True) as resp:
+            for line in resp.iter_lines():
+                if line:
+                    parsed = line.decode('ascii')[2:-1]
+                    if f"[{username}]" not in parsed:
+                        print(parsed)
+    except ConnectionError:
+        print("Connection dropped. The server might not be running.")
+        os._exit(1)
+    except:
+        print("An unknown error occurred.")
+        os._exit(1)
 
 def chat(user, channel):
     while True:
