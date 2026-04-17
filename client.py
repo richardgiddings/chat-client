@@ -2,8 +2,11 @@ import requests
 import threading
 import argparse
 import os
+from decouple import config
 
-BASE_URL = "http://127.0.0.1:5000"
+
+BASE_URL = config("BASE_URL")
+
 
 def connect(url, username):
     s = requests.Session()
@@ -19,12 +22,14 @@ def connect(url, username):
                 if f"[{username}]" not in parsed:
                     print(parsed)
 
+
 def chat(user, channel):
     while True:
         text = input()
         if text == "exit":
             os._exit(1)
         requests.post(f"{BASE_URL}/post", data={"message": text, "user": user, "channel": channel})
+
 
 if __name__ == "__main__":
 
