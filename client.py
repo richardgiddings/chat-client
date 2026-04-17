@@ -8,16 +8,16 @@ from decouple import config
 BASE_URL = config("BASE_URL")
 
 
-def connect(url, username):
+def connect(url, username, channel):
 
     try:
         s = requests.Session()
 
-        print(f"Connected to {url} as {username}")
+        print(f"Connected to chat {channel} as {username}")
         print("Type a message and press return to send it.")
         print("Type 'exit' and press return to exit the chat.\n")
 
-        with s.get(url, headers=None, stream=True) as resp:
+        with s.get(url+"?channel="+channel, headers=None, stream=True) as resp:
             for line in resp.iter_lines():
                 if line:
                     parsed = line.decode('ascii')[2:-1]
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     parser.add_argument("channel")
     args = parser.parse_args()
 
-    thread1 = threading.Thread(target=connect, args=(f"{BASE_URL}/stream",args.username))
+    thread1 = threading.Thread(target=connect, args=(f"{BASE_URL}/stream",args.username, args.channel,))
     thread1.start()
 
     thread2 = threading.Thread(target=chat, args=(args.username,args.channel,))
